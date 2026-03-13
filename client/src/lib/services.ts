@@ -9,7 +9,8 @@ export const registerUser = async (user: User) => {
   const res = await fetch(`${API_URL}/signup`, {
      method: "POST", 
      headers: {"Content-Type": "application/json"},
-     body: JSON.stringify({ fullname, email, password, bio })
+     body: JSON.stringify({ fullname, email, password, bio }),
+     credentials: 'include'
     })
 
     return res.json()
@@ -18,12 +19,16 @@ export const registerUser = async (user: User) => {
 
 export const loginUser = async (email: string, password: string) => {
 
+    console.log('sending login requrest...')
+
     const res  = await fetch(`${API_URL}/login`, {
-        method: 'GET',
+        method: 'POST',
         headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({email, password})
+        body: JSON.stringify({email, password}), 
+        credentials: 'include'
     })
     return res.json()
+
 }
 
 

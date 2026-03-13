@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import assets from "../assets/assets"
 import { initState, type userType } from "../pages/HomePage"
 import { formatMessageTime } from "../lib/utils";
-import { connectSocket, getSocket } from "../modules/socket";
 
 
 interface Message {

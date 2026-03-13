@@ -30,6 +30,7 @@ export const register = async (req, res) => {
 
 
 export const login = async (req, res) => {
+    console.log('backend login controller is running!')
     const {email, password, } = req.body
     if(!email, !password){res.status(400).json({ success: false, details:"Missing required fields"})}
     const existingUser = await User.findOne({email: email})
@@ -43,7 +44,7 @@ export const login = async (req, res) => {
                 process.env.JWT_SECRET, 
                 {expiresIn: "1d"}
             )
-           res.status(200).json({success: true, details: "logged in successfully", token: token}) 
+           res.status(200).json({success: true, details: "logged in successfully", token: token, user: existingUser }) 
         }
         else if(!isMatch) {
             res.status(400).json({ success: false, details:"Wrong Credentials"})

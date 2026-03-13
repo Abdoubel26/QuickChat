@@ -1,24 +1,34 @@
 import { useState } from "react"
 import assets from "../assets/assets"
-
+import { registerUser, loginUser } from "../lib/services";
+import { useAuth } from "../context/authContext";
 
 type loginOrSignup = 'Log in' | 'Sign up';
 
 const LoginPage = () => {
 
+  const { user, token, setAuth, logout} = useAuth()
 
-  const [fullName, setFullName] = useState<string>("")
+  const [fullname, setFullname] = useState<string>("")
   const [email, setEmail] = useState<string>("")
   const [password, setPassword] = useState<string>("")
   const [bio, setBio] = useState<string>("")
   const [isDataSubmitted, setIsDataSubmitted] = useState<boolean>(false)
   const [currState, setCurrState] = useState<loginOrSignup>('Sign up')
 
-  const onSubmitHandler = (event: any)=> {
+  const onSubmitHandler =  async (event: any)=> {
     event.preventDefault();
 
-    if(currState === "Sign up" && !isDataSubmitted) {
+    if(currState === "Log in" && !isDataSubmitted) {
       setIsDataSubmitted(true)
+      const response = await loginUser(email, password)
+      if(response.success){
+        setAuth(response.user, response.token)
+        console.log(response.user)
+      } else {
+        alert(response.details)
+        console.log(response.details)
+      }
       return;
     }
   }
@@ -35,7 +45,7 @@ const LoginPage = () => {
         </h2>
 
         {currState === "Sign up" && !isDataSubmitted && (
-          <input type='text' className="p-2 border border-gray-500 rounded-md focus:outline-none"  onChange={(e) => setFullName(e.target.value)} value={fullName} placeholder="Full Name" required/>
+          <input type='text' className="p-2 border border-gray-500 rounded-md focus:outline-none"  onChange={(e) => setFullname(e.target.value)} value={fullname} placeholder="Full Name" required/>
         )} 
 
         {!isDataSubmitted && (
