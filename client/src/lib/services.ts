@@ -4,6 +4,8 @@ import { type User } from "./types";
 const API_URL: string = "http://localhost:5000/api/user"
 
 export const registerUser = async (user: User) => {
+
+    console.log('registerUser is running...')
     const { fullname, email, password, bio } = user
 
   const res = await fetch(`${API_URL}/signup`, {

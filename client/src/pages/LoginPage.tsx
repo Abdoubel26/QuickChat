@@ -2,10 +2,15 @@ import { useState } from "react"
 import assets from "../assets/assets"
 import { registerUser, loginUser } from "../lib/services";
 import { useAuth } from "../context/authContext";
+import { useNavigate } from "react-router-dom";
 
 type loginOrSignup = 'Log in' | 'Sign up';
 
+
+
 const LoginPage = () => {
+
+  const navigate = useNavigate()
 
   const { user, token, setAuth, logout} = useAuth()
 
@@ -19,17 +24,31 @@ const LoginPage = () => {
   const onSubmitHandler =  async (event: any)=> {
     event.preventDefault();
 
+    
     if(currState === "Log in" && !isDataSubmitted) {
       setIsDataSubmitted(true)
       const response = await loginUser(email, password)
       if(response.success){
         setAuth(response.user, response.token)
-        console.log(response.user)
+        navigate("/")
       } else {
         alert(response.details)
         console.log(response.details)
       }
       return;
+    }
+    else if(currState === 'Sign up' && !isDataSubmitted) {
+      setIsDataSubmitted(true)
+    } else if (currState === 'Sign up' && isDataSubmitted) {
+        const response = await registerUser({fullname, password, email, bio})
+      if(response.success){
+        setAuth(response.user, response.token)
+        console.log(response.user)
+        navigate('/')
+      } else {
+        alert(response.details)
+        console.log(response.details)
+      }
     }
   }
 
@@ -57,7 +76,9 @@ const LoginPage = () => {
 
         {
           currState === "Sign up" && isDataSubmitted && (
-            <textarea rows={4} className="p-2 border broder-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Write Your Biography Here" onChange={(e)=>setBio(e.target.value)}  value={bio} required ></textarea>
+            <textarea rows={4} className="p-2 border broder-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Write Your Biography Here" onChange={(e)=>{
+              setBio(e.target.value)
+            }}  value={bio} required ></textarea>
           )
         }
 

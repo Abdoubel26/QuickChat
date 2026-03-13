@@ -20,7 +20,12 @@ export const register = async (req, res) => {
     const CreatedUser = new User({ fullname, email, hashedPassword, bio})
     try {
         await CreatedUser.save()
-        res.status(201).send({ success: true, details: "User Registered successfully"})
+        const token = jwt.sign(
+                {id: CreatedUser.id, email: CreatedUser.email },
+                process.env.JWT_SECRET, 
+                {expiresIn: "1d"}
+            )
+        res.status(201).send({ success: true, details: "User Registered successfully", user: CreatedUser, token: token})
 
     } catch(e) {
         console.log(e)
