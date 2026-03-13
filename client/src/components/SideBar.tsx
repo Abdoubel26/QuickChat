@@ -1,6 +1,8 @@
 import { useNavigate } from 'react-router-dom';
 import assets, { userDummyData } from '../assets/assets'
 import { type userType } from '../pages/HomePage';
+import { useAuth } from '../context/authContext';
+
 
 type PropTypes = {
     selectedUser: userType;
@@ -8,6 +10,8 @@ type PropTypes = {
 }
 
 const SideBar = ({selectedUser, setSelectedUser}: PropTypes) => {
+
+  const {logout} = useAuth()
 
     const navigate = useNavigate()
 
@@ -23,7 +27,10 @@ const SideBar = ({selectedUser, setSelectedUser}: PropTypes) => {
                 <div className='absolute top-full right-0 z-20 w-32 p-5 rounded-md bg-[#282142] border-gray-600 text-gray-100 hidden group-hover:block'>
                 <p className='cursor-pointer text-sm' onClick={ () => navigate('/profile')}>Edit Profile</p>
                 <hr className='my-2 border-t border-gray-500' />
-                <p className='cursor-pointer text-sm'>Logout</p>
+                <p className='cursor-pointer text-sm' onClick={() => {
+                  logout()
+                  navigate('/login')
+                  }} >Logout</p>
                 </div>
             </div>
         </div>
