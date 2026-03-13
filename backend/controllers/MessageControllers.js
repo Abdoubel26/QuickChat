@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import express from "express"
 import Message from "../models/message";
+import { MongoAzureError } from "mongodb";
 
 
 
@@ -26,17 +27,17 @@ export const getMessages = async (req, res) => {
 
 export const sendMessage = async (req, res) => {
     const { userCredentials } = req
-    const { SenderId, ReceiverId, Message} = req.body
-    if(!userCredentials  || !SenderId || !ReceiverId || !Message) return res(400).json({ success: true, details: "User Credentials not provided!"})
+    const { ReceiverId, MessageReceived} = req.body
+    if(!userCredentials || !ReceiverId || !MessageReceived) return res(400).json({ success: true, details: "User Credentials not provided!"})
     
-    const NewMessage = {
-        SenderId: SenderId,
+    const NewMessage = new Message({
+        SenderId: userCredentials.id,
         ReceiverId: ReceiverId,
-        Message: Message,
-    }
+        Message: MessageReceived,
+    })
     try {
-        const CreatedMessage = await Message.save(NewMessage)
-        res.status(201).json({ success: true, details:"Message Sent Successfully"})
+        const CreatedMessage = await NewMessage.save()
+        res.status(201).json({ success: true, details:"Message Sent Successfully", NewMessage: NewMessage})
     } catch(e) {
         console.log(e.message)
         res.status(500).json({ success: false, details:' Server Error!'})
