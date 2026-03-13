@@ -1,7 +1,18 @@
-import { useEffect, useRef } from "react";
-import assets, { messagesDummyData } from "../assets/assets"
+import { useEffect, useRef, useState } from "react";
+import assets from "../assets/assets"
 import { initState, type userType } from "../pages/HomePage"
 import { formatMessageTime } from "../lib/utils";
+import { connectSocket, getSocket } from "../modules/socket";
+
+
+interface Message {
+  SenderId: string, 
+  ReceiverId: string,
+  text: string,
+  image?: string
+  CreatedAt: string,
+}
+
 
 type PropTypes = {
     selectedUser: userType;
@@ -10,11 +21,14 @@ type PropTypes = {
 
 const ChatContainer = ({selectedUser, setSelectedUser}: PropTypes ) => {
 
+
+  const [messages, setMessage] = useState<Message[]>([])
+
   const scrollEnd = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (scrollEnd.current) scrollEnd.current.scrollIntoView({ behavior: 'smooth' })
-  }, [messagesDummyData.length])
+  }, [messages.length])
 
   return selectedUser !== initState  ? (
     <div className=" flex flex-col min-h-0">
@@ -36,13 +50,12 @@ const ChatContainer = ({selectedUser, setSelectedUser}: PropTypes ) => {
       { /* chat area */ }
 
       <div className="flex-1 min-h-0 overflow-y-auto">
-        {messagesDummyData.map((msg, indx) =>(
+        {messages.map((msg, indx) =>(
           <div key={indx} className={`flex items-end justify-end gap-2 ${msg.senderId !== '680f50e4f10f3cd28382ecf9' && 'flex-row-reverse'}` }>
             {msg.image ? <img src={msg.image}></img> : <p className={`p-2 max-w-50 md:text-sm font-light rounded-lg mb-8 break-all bg-violet-500/30 text-white ${msg.senderId === '680f50e4f10f3cd28382ecf9' ? 'rounded-br-none ' : 'rounded-bl-none' } `}> {msg.text } </p>}
             <div className="text-center text-xs">
-              <img src={msg.senderId === '680f50e4f10f3cd28382ecf9' ? assets.avatar_icon : assets.profile_martin} alt='' className="w-7 rounded-full"/> 
-              <p className="text-gray-500" >{formatMessageTime(msg.createdAt)}</p>
-
+              <img src={msg.SenderId === '680f50e4f10f3cd28382ecf9' ? assets.avatar_icon : assets.profile_martin} alt='' className="w-7 rounded-full"/> 
+              <p className="text-gray-500" >{formatMessageTime(msg.CreatedAt)}</p>
             </div>
           </div>
         ))}

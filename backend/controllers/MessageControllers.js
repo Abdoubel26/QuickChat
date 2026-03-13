@@ -28,7 +28,7 @@ export const sendMessage = async (req, res) => {
     const NewMessage = new Message({
         SenderId: userCredentials.id,
         ReceiverId: ReceiverId,
-        Message: MessageReceived,
+        text: MessageReceived,
     })
     try {
         const CreatedMessage = await NewMessage.save()
