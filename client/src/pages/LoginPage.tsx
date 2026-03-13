@@ -12,7 +12,7 @@ const LoginPage = () => {
 
   const navigate = useNavigate()
 
-  const { user, token, setAuth, logout} = useAuth()
+  const { setAuth} = useAuth()
 
   const [fullname, setFullname] = useState<string>("")
   const [email, setEmail] = useState<string>("")

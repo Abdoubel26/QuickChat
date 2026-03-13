@@ -4,14 +4,11 @@ import http from 'http'
 import { Server } from 'socket.io'
 import userRouter from './routes/user.route.js'
 import messagesRouter from './routes/messages.route.js'
-import { AuthMiddleware } from './middleware/auth.js'
 import cors from 'cors'
 
 const app = express()
 
 const server = http.createServer(app)
-
-
 
 const io = new Server(server, {
     cors: {
@@ -28,7 +25,6 @@ app.use(cors({
 
 }))
 
-
 app.use(express.json())
 
 app.use('/api/user', userRouter)
@@ -37,7 +33,6 @@ app.use('/api/messages', messagesRouter)
 connectDB()
 
 server.listen(5000, () => console.log("App is listening in port 5000"))
-
 
 const onlineUsers = {}
 
