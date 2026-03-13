@@ -1,0 +1,57 @@
+import User from "../models/user.js"
+import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken'
+import dotenv from 'dotenv'
+
+dotenv.config()
+
+export const register = async (req, res) => {
+    const {fullname, email, password, bio} = req.body
+
+    if(!fullname || !email || !bio || !password){
+        return res.status(400).json({ success: false, details: "Missing required Fields"})
+    }
+
+    const existingUser = await User.findOne({email: email})
+    if(existingUser){
+        res.status(400).json({ success: false, details:" Email Already Registered"})
+    }
+    const hashedPassword = await bcrypt.hash(password, 10)
+    const CreatedUser = new User({ fullname, email, hashedPassword, bio})
+    try {
+        await CreatedUser.save()
+        res.status(201).send({ success: true, details: "User Registered successfully"})
+
+    } catch(e) {
+        console.log(e)
+        res.status(500).json({success: false, details:"Server Error!"})
+    }
+}
+
+
+export const login = async (req, res) => {
+    const {email, password, } = req.body
+    if(!email, !password){res.status(400).json({ success: false, details:"Missing required fields"})}
+    const existingUser = await User.findOne({email: email})
+    if(!existingUser) return res.status(404).json({success: false, details: "Email not Found, Please Register"})
+
+    const isMatch = await bcrypt.compare(password, existingUser.hashedPassword)
+    try {
+        if(isMatch){
+           res.status(200).json({success: true, details: "logged in successfully"}) 
+
+        }
+        else if(!isMatch) {
+            const token = jwt.sign(
+                {id: existingUser.id, email: existingUser.email },
+                process.env.JWT_SECRET, 
+                {expiresIn: "1d"}
+            )
+            res.status(400).json({ success: false, details:"Wrong Credentials"})
+        }
+    } catch(e) {
+        console.log(e.message)
+        res.status(500).json({ success: false, details:"Server Error!"})
+    }
+}
+

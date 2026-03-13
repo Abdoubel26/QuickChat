@@ -20,7 +20,7 @@ const ChatContainer = ({selectedUser, setSelectedUser}: PropTypes ) => {
     <div className=" flex flex-col min-h-0">
       
             { /* header */ }
-      <div className="flex items-center gap-3 py-3 mx-4 border-b border-stone-500">
+      <div className="flex items-center gap-3 py-3 mx-4 border-b border-stone-500 mb-1">
 
         <img src={assets.arrow_icon}  onClick={() => setSelectedUser(initState) } className="w-5"></img>
         <img src={assets.profile_martin} className=" w-15 rounded-full "></img>
@@ -65,7 +65,7 @@ const ChatContainer = ({selectedUser, setSelectedUser}: PropTypes ) => {
     </div>
   ) : (
     <div className="flex items-center justify-center">
-    <div className="bg-blue-400 rounded-2xl w-90 h-90 flex flex-col justify-center items-center ">
+    <div className="bg-linear-to-t from-blue-600 to-blue-300 rounded-2xl w-90 h-90 flex flex-col justify-center items-center  mt-5">
       <img src={assets.logo_icon} className="max-w-16"></img>
       <p className="text-white font-semibold py-2  text-2xl">Chat Anytime, Anywhere</p>
     </div>
