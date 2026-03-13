@@ -8,9 +8,7 @@ interface authContextType {
     logout: () => void
 }
 
-const [auth, setauth] = useState()
-
-const authContext = createContext<authContextType>({
+export const authContext = createContext<authContextType>({
     user: null,
     token: null,
     setAuth: (user) => { user},
@@ -18,7 +16,7 @@ const authContext = createContext<authContextType>({
 })
 
 
-const AuthContextProvider: React.FC<{ children: React.ReactNode}> = ({ children }) => {
+export const AuthProvider: React.FC<{ children: React.ReactNode}> = ({ children }) => {
 
     const [user, setUser] = useState<User | null>(null)
     const [token, setToken] = useState<string | null>(null)
@@ -30,9 +28,21 @@ const AuthContextProvider: React.FC<{ children: React.ReactNode}> = ({ children 
         localStorage.setItem('token', token)
     }
 
-    const logout: () => {} = {
-        
+    const logout: () => void = () => {
+        setUser(null)
+        setToken(null)
+        localStorage.removeItem("user")
+        localStorage.removeItem('token')
     }
 
-    const log
+    return (
+        <authContext.Provider value={{ user, token, setAuth, logout}}>
+            {children}
+        </authContext.Provider>
+    )
+}
+
+export const useAuth = () => {
+    const context: authContextType = useContext(authContext)
+    return context
 }

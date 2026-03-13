@@ -2,12 +2,12 @@ import { Routes, Route } from "react-router"
 import HomePage from "./pages/HomePage"
 import ProfilePage from "./pages/ProfilePage"
 import LoginPage from "./pages/LoginPage"
+import { AuthProvider } from "./context/authContext"
 
 function App() {
 
-
-  return (
-    <>
+  const content = ( 
+       <>
     <div className="bg-[url('./src/assets/bgImage.svg')] h-screen bg-contain">
       <Routes>
         <Route  path='/' element={< HomePage />} />
@@ -17,6 +17,12 @@ function App() {
     </div>
     
     </>
+  )
+
+  return (
+    <AuthProvider >
+      {content}
+    </AuthProvider>
   )
 }
 
