@@ -8,4 +8,5 @@ const userSchema = new mongoose.Schema({
     bio: String,
 })
 
+
 export default mongoose.model("User", userSchema)
