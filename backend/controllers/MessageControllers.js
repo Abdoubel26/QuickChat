@@ -1,9 +1,4 @@
-import mongoose from "mongoose";
-import express from "express"
-import Message from "../models/message";
-import { MongoAzureError } from "mongodb";
-
-
+import Message from "../models/message.js";
 
 export const getMessages = async (req, res) => {
     const { userCredentials } = req

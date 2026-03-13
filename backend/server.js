@@ -1,24 +1,52 @@
 import express from "express";
 import { connectDB } from "./config/db.js";
-import userRoute from './routes/user.route.js'
-
+import http from 'http'
+import { Server } from 'socket.io'
+import userRouter from './routes/user.route.js'
+import messagesRouter from './routes/messages.route.js'
+import { AuthMiddleware } from './middleware/auth.js'
 
 
 const app = express()
 
+const server = http.createServer(app)
+
+const io = new Server(server, {
+    cors: {
+        origin: "*",
+
+    }
+})
+
 app.use(express.json())
 
-app.use('/api/user', userRoute)
-
+app.use('/api/user', userRouter)
+app.use('/api/messages', messagesRouter)
 
 connectDB()
 
+server.listen(5000, () => console.log("App is listening in port 5000"))
 
 
-app.get((res, req) => {
-    console.log('API in here')
+const onlineUsers = {}
+
+io.on('connection', (socket) => {
+    console.log(`user connected:` + socket.id)
+
+    socket.on('register-user', (userId) => {
+      onlineUsers[userId] = socket.id 
+    }   )
+
+    socket.on('disconnect', (userId) => {
+        for(const userId in onlineUsers){
+            if( onlineUsers[userId] === socket.id){
+                delete onlineUsers[userId]
+            }
+        }
+    })
+
 })
 
-app.listen(5000, () => console.log("App is listening in port 5000"))
+export { io, onlineUsers}
 
 
