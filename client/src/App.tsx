@@ -3,8 +3,21 @@ import HomePage from "./pages/HomePage"
 import ProfilePage from "./pages/ProfilePage"
 import LoginPage from "./pages/LoginPage"
 import { AuthProvider } from "./context/authContext"
+import { useEffect } from "react"
+import { useSocket } from "./context/socketContext"
+
+
+
 
 function App() {
+
+  const { socket } = useSocket() 
+
+  useEffect(() => {
+
+    socket.on('connect', () => console.log('user connected') )
+
+  }, [])
 
   const content = ( 
        <>
@@ -20,9 +33,9 @@ function App() {
   )
 
   return (
-    <AuthProvider >
-      {content}
-    </AuthProvider>
+      <AuthProvider >
+        {content}
+      </AuthProvider>
   )
 }
 

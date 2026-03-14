@@ -10,7 +10,7 @@ const ProfilePage = () => {
   const navigate = useNavigate()
 
   const stringUser = localStorage.getItem("user")
-  if(!stringUser) return console.log("User not found in localStrage")
+  if(!stringUser) return null;
   const user = JSON.parse(stringUser)
 
   const [fullname, setFullname] = useState<string>(user.fullname)

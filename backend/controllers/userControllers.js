@@ -78,3 +78,15 @@ export const updateProfile = async (req, res) => {
         res.status(500).json({ success: false, details: "Server Error!"})
     }
 }
+
+export const getUsers = async (req, res) => {
+    try {
+        const users = await User.find()
+        res.status(200).json({ success: true, details: 'users fetched successfully', users: users})
+    }
+    catch(e) {
+        console.log(e.message)
+        res.status(500).json({ success: false, details: 'Server Error!'})
+    }
+   
+}

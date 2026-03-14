@@ -1,22 +1,15 @@
 import express from "express";
 import { connectDB } from "./config/db.js";
-import http from 'http'
-import { Server } from 'socket.io'
 import userRouter from './routes/user.route.js'
 import messagesRouter from './routes/messages.route.js'
+import  http from 'http'
 import cors from 'cors'
+import { Server } from "socket.io";
+import  Message  from './models/message.js'
+
 
 const app = express()
-
-const server = http.createServer(app)
-
-const io = new Server(server, {
-    cors: {
-        origin: "*",
-
-    }
-})
-
+app.use(express.json())
 app.use(cors({
     origin: 'http://localhost:5173',
     credentials: true,
@@ -25,32 +18,35 @@ app.use(cors({
 
 }))
 
-app.use(express.json())
+const onlineUsers = {}
+
+const server = http.createServer(app)
+
+const io = new Server(server, { cors: {
+    origin: '*',
+    credentials: true,
+    methods: ["POST", "GET"],
+    allowedHeaders: ["Content-Type","Authorization"]
+}} )
+
+io.on('connection', (socket) => {
+    console.log("a user connected:" + socket.id)
+
+    socket.on('send-message', async (message) => {
+        await Message.create(message)
+        io.emit('receive-message', (message))
+    })
+
+    socket.on('disconnect', () => {
+        console.log('User' + socket.id + "disconnected")
+    })
+})
+
+
 
 app.use('/api/user', userRouter)
 app.use('/api/messages', messagesRouter)
 
 connectDB()
 
-server.listen(5000, () => console.log("App is listening in port 5000"))
-
-const onlineUsers = {}
-
-io.on('connection', (socket) => {
-    console.log(`user connected:` + socket.id)
-
-    socket.on('register-user', (userId) => {
-      onlineUsers[userId] = socket.id 
-    }   )
-
-    socket.on('disconnect', () => {
-        for(const userId in onlineUsers){
-            if( onlineUsers[userId] === socket.id){
-                delete onlineUsers[userId]
-            }
-        }
-    })
-
-})
-
-export { io, onlineUsers}
+server.listen(5000, () => console.log("server is listening in port 5000"))

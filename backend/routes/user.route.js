@@ -1,8 +1,10 @@
 import express from 'express'
-import { register , login, updateProfile} from '../controllers/userControllers.js'
+import { register , login, updateProfile, getUsers} from '../controllers/userControllers.js'
 
 
 const router = express.Router()
+
+router.get('/', getUsers)
 
 router.post("/signup", register)
 

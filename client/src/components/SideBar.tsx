@@ -1,15 +1,35 @@
 import { useNavigate } from 'react-router-dom';
-import assets, { userDummyData } from '../assets/assets'
-import { type userType } from '../pages/HomePage';
+import assets from '../assets/assets'
 import { useAuth } from '../context/authContext';
-
+import { getusers } from '../lib/services';
+import { useState } from 'react';
+import { type User } from '../lib/types';
 
 type PropTypes = {
-    selectedUser: userType;
-    setSelectedUser: React.Dispatch<React.SetStateAction<userType>>
+    selectedUser: User;
+    setSelectedUser: React.Dispatch<React.SetStateAction<User>>
 }
 
+
+ 
 const SideBar = ({selectedUser, setSelectedUser}: PropTypes) => {
+
+  const [users, setUsers] = useState<User[]>([])
+
+  const ThisUser = JSON.parse(localStorage.getItem('user')!)
+
+  
+    const loadUsers = async () => {
+      const response = await getusers()
+      if(response.success) {
+        const usersWithoutThisOne = response.users.filter( (u: User) => u._id !== ThisUser._id )
+        setUsers(usersWithoutThisOne)
+      } else {
+        alert(response.details)
+      }}
+
+    
+     loadUsers()
 
   const {logout} = useAuth()
 
@@ -38,13 +58,13 @@ const SideBar = ({selectedUser, setSelectedUser}: PropTypes) => {
         </div>
       </div>
 
-      <div className='flex flex-col  '>
-        {userDummyData.map((user, i) => {
+      <div className='flex flex-col overflow-y-scroll  '>
+        {users.map((user, i) => {
             return ( 
             <div onClick={()=> setSelectedUser(user)} className={`relative flex items-center gap-2 p-2 pl-4  rounded-2xl cursor-pointer max-sm:text-sm ${selectedUser?._id === user._id && 'bg-[#282142]/50'}`}> 
-                <img src={user?.profilePic || assets.avatar_icon} alt='' className='w-8.75 aspect-squarerounded-full rounded-full' />
+                <img src={assets.avatar_icon} alt='' className='w-8.75 aspect-squarerounded-full rounded-full' />
                 <div className=' flex flex-row items-center w-full '>
-                    <p className='whitespace-nowrap text-sm'>{user.fullName}</p>
+                    <p className='whitespace-nowrap text-sm'>{user.fullname}</p>
                     { i < 3 ? <span className='text-xs mx-1'>🟢</span> : null}
 
                     {i > 2 && <p className='text-xs h-5 w-5 mx-1 flex justify-center items-center rounded-full bg-violet-500/50'>{i}</p>}

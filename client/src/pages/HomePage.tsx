@@ -2,22 +2,16 @@ import { useState } from "react";
 import ChatContainer from "../components/ChatContainer"
 import RightSideBar from "../components/RightSideBar"
 import SideBar from "../components/SideBar"
+import { type User } from "../lib/types";
 
-export type userType = {
-    _id: string,
-    email: string,
-    fullName: string,
-    profilePic: string,
-    bio: string
-} 
-
-export const initState: userType = {
-  _id: '', email: '', fullName: '', profilePic: '', bio: ''
+export const initState: User = {
+  password: '', email:'', fullname: '', bio:'', _id: ''
 }
+
 
 const HomePage = () => {
 
-  const [selectedUser, setSelectedUser] = useState<userType>(initState);
+  const [selectedUser, setSelectedUser] = useState<User>(initState);
 
   return (
     <div className="border w-full h-full sm:py-[5%] sm:px-[15%] ">

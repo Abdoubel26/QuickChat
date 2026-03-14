@@ -3,5 +3,6 @@ export interface User {
     email: string, 
     password: string,
     bio: string,
+    _id?: string,
 }
 
