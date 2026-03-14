@@ -1,7 +1,7 @@
 import Message from "../models/message.js";
 
 export const getMessages = async (req, res) => {
-    const { id, secondUserId } = req.
+    const { id, secondUserId } = req.query
     if(!id || !secondUserId ) return res(400).json({ success: true, details: "User Credentials not provided!"})
         
     try {

@@ -4,7 +4,7 @@ import dotenv from 'dotenv'
 dotenv.config()
 
 export const AuthMiddleware = (req, res, next) => {
-    const authHeader = req.header.authorization
+    const authHeader = req.headers.authorization
 
     if(!authHeader) return res.status(400).json({ success: false, details:"Authorization Token not Provided!"})
 

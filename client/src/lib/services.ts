@@ -2,7 +2,7 @@ import { type User } from "./types";
 
 
 const API_URL_USER: string = "http://localhost:5000/api/user"
-const API_URL_MESSAGES: string = "http://localhost:5000/api/messsages"
+const API_URL_MESSAGES: string = "http://localhost:5000/api/messages"
 
 export const registerUser = async (user: User) => {
 
@@ -59,7 +59,7 @@ export const getMessages = async (thisUserId: string,  secondUserId: string, tok
     const res =  await fetch(`${API_URL_MESSAGES}?id=${thisUserId}&secondUserId=${secondUserId}`, {
         method: 'GET',
         headers: {
-            "Content-Type": 'application/josn',
+            "Content-Type": 'application/json',
             "authorization": `Bearer ${token}`
         }
     })
