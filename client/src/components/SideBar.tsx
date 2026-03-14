@@ -60,4 +60,4 @@ const SideBar = ({selectedUser, setSelectedUser}: PropTypes) => {
   )
 }
 
-export default SideBar
+export default SideBar;

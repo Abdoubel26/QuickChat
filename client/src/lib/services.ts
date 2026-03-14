@@ -30,8 +30,16 @@ export const loginUser = async (email: string, password: string) => {
         credentials: 'include'
     })
     return res.json()
-
 }
 
+export const updateUser = async (fullname: string, bio: string, id: string) => {
+    console.log("sending Update profile request...")
 
-
+    const res = await fetch(`${API_URL}/update`, 
+        {
+            method: "PUT",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({fullname, bio, id})
+        })
+    return res.json()
+}

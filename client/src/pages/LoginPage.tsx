@@ -7,8 +7,7 @@ import { useNavigate } from "react-router-dom";
 type loginOrSignup = 'Log in' | 'Sign up';
 
 
-
-const LoginPage = () => {
+const LoginPage: React.FC = () => {
 
   const navigate = useNavigate()
 

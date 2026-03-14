@@ -60,3 +60,21 @@ export const login = async (req, res) => {
     }
 }
 
+export const updateProfile = async (req, res) => {
+    const {fullname, bio, id } = req.body
+    if(!fullname || !bio) return res.status(400).json({ success: false, details: "Missing required fields"})
+    try {
+        const updateduser = await User.findByIdAndUpdate( id, {fullname, bio})
+        if(!updateduser) return res.status(400).json({ success: false, details:"user not found!"})
+        const token = jwt.sign(
+            {id: updateduser.id, email: updateduser.email}, 
+            process.env.JWT_SECRET,
+            {expiresIn: "1d"}
+        )
+        res.status(200).json({ success: true, details: "Updated Successfully!", token: token, user: updateduser})
+    }
+    catch(e) {
+        console.log(e.message)
+        res.status(500).json({ success: false, details: "Server Error!"})
+    }
+}
