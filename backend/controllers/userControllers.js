@@ -21,7 +21,7 @@ export const register = async (req, res) => {
     try {
         await CreatedUser.save()
         const token = jwt.sign(
-                {id: CreatedUser.id, email: CreatedUser.email },
+                {id: CreatedUser.id},
                 process.env.JWT_SECRET, 
                 {expiresIn: "1d"}
             )
@@ -45,7 +45,7 @@ export const login = async (req, res) => {
     try {
         if(isMatch){
             const token = jwt.sign(
-                {id: existingUser.id, email: existingUser.email },
+                {id: existingUser.id},
                 process.env.JWT_SECRET, 
                 {expiresIn: "1d"}
             )
@@ -67,7 +67,7 @@ export const updateProfile = async (req, res) => {
         const updateduser = await User.findByIdAndUpdate( id, {fullname, bio})
         if(!updateduser) return res.status(400).json({ success: false, details:"user not found!"})
         const token = jwt.sign(
-            {id: updateduser.id, email: updateduser.email}, 
+            {id: updateduser.id}, 
             process.env.JWT_SECRET,
             {expiresIn: "1d"}
         )
