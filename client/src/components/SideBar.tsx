@@ -13,15 +13,17 @@ type PropTypes = {
 const SideBar = ({selectedUser, setSelectedUser}: PropTypes) => {
 
   const [users, setUsers] = useState<User[]>([])
-
-  const { user } = useAuth()
+  
+  const { id } = useAuth()
 
     const loadUsers = async () => {
       const response = await getusers()
-      if(response.success && user) {
-        const usersWithoutThisOne = response.users.filter( (u: User) => u._id !== user._id )
-        setUsers(usersWithoutThisOne)
-      } else {
+      if(response.success) {
+        if(id){
+          const usersWithoutThisOne = response.users.filter( (u: User) => u._id !== id )
+          setUsers(usersWithoutThisOne)
+        }}
+        else {
         alert(response.details)
       }}
 

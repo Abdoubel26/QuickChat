@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router"
+import { Routes, Route, useNavigate } from "react-router"
 import HomePage from "./pages/HomePage"
 import ProfilePage from "./pages/ProfilePage"
 import LoginPage from "./pages/LoginPage"
@@ -8,16 +8,26 @@ import { useSocket } from "./context/socketContext"
 
 
 
-
 function App() {
 
+  const navigate = useNavigate()
+
   const { socket } = useSocket() 
+  const id = localStorage.getItem('id')
+  const token = localStorage.getItem('token')
 
   useEffect(() => {
 
     socket.on('connect', () => console.log('user connected') )
+    if(!id && !token){
+      navigate('/login')
+    } else {
+      navigate('/')
+    }
+
 
   }, [])
+
 
   const content = ( 
        <>

@@ -1,25 +1,44 @@
 import assets from  "../assets/assets"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { updateUser } from "../lib/services"
 import { useAuth } from "../context/authContext"
 import { useNavigate } from "react-router-dom"
+import { getOneUser } from "../lib/services"
 
 const ProfilePage = () => {
 
   const { setAuth } = useAuth()
+
   const navigate = useNavigate()
 
-  const stringUser = localStorage.getItem("user")
-  if(!stringUser) return null;
-  const user = JSON.parse(stringUser)
+  const [fullname, setFullname] = useState<string>('')
+  const [bio, setBio] = useState<string>('')
+  const id = localStorage.getItem('id')
 
-  const [fullname, setFullname] = useState<string>(user.fullname)
-  const [bio, setBio] = useState<string>(user.bio)
+  useEffect( () => {
+    const loadUser = async () => {
+      if(id){
+        const res = await getOneUser(id)
+      if(res.success){
+        setFullname(res.user.fullname)
+        setBio(res.user.bio)
+      } else {
+        alert(res.details)
+      }} 
+    }
+    loadUser()
+  }, [])
 
   const handleSave = async () => {
-    const response = await updateUser(fullname, bio, user._id)
+    if(!id) {
+      alert('no user logged in')
+      return
+    }
+
+    const response = await updateUser(fullname, bio, id)
     if(response.success) {
-      setAuth(response.user, response.token)
+      setAuth(response.user._id, response.token)
+      alert('profile updated!')
     } else {
       alert(response.details)
       console.log(response.details)

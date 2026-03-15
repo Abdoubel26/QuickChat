@@ -28,7 +28,7 @@ const LoginPage: React.FC = () => {
       setIsDataSubmitted(true)
       const response = await loginUser(email, password)
       if(response.success){
-        setAuth(response.user, response.token)
+        setAuth(response.user._id, response.token)
         navigate("/")
       } else {
         alert(response.details)

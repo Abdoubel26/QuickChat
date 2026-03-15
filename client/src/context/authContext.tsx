@@ -1,51 +1,51 @@
 import { useContext, useState, createContext, useEffect } from "react";
-import {  type User } from '../lib/types'
+
 
 interface authContextType {
-    user: User | null,
+    id: string | null,
     token: string | null,
-    setAuth: (user: User, token: string) => void
+    setAuth: (id: string, token: string) => void
     logout: () => void
 }
 
 export const authContext = createContext<authContextType>({
-    user: null,
+    id: null,
     token: null,
-    setAuth: (user) => { user},
+    setAuth: () => { },
     logout: () => {}
 })
 
 export const AuthProvider: React.FC<{ children: React.ReactNode}> = ({ children }) => {
 
-    const [user, setUser] = useState<User | null>(null)
+    const [id, setId] = useState<string | null>(null)
     const [token, setToken] = useState<string | null>(null)
 
-    const setAuth: (user: User, token: string ) => void = (user: User, token: string) => {
-        setUser(user)
+    const setAuth: (id: string, token: string ) => void = (id: string, token: string) => {
+        setId(id)
         setToken(token)
-        localStorage.setItem('user', JSON.stringify(user))
+        localStorage.setItem('id', id)
+        console.log(id)
         localStorage.setItem('token', token)
     }
 
     useEffect(() => {
-        const user = localStorage.getItem('user')
+        const id = localStorage.getItem('id')
         const token = localStorage.getItem('token')
-        if(user && token){
+        if(id && token){
             setToken(token)
-            setUser(JSON.parse(user))
-        }
+            setId(id)
+        } 
     }, [])
 
     const logout: () => void = () => {
-        setUser(null)
+        setId('')
         setToken(null)
-        localStorage.removeItem("user")
+        localStorage.removeItem("id")
         localStorage.removeItem('token')
     }
 
-    console.log(token)
     return (
-        <authContext.Provider value={{ user, token, setAuth, logout}}>
+        <authContext.Provider value={{ id, token,  setAuth, logout}}>
             {children}
         </authContext.Provider>
     )

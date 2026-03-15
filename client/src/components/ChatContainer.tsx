@@ -22,13 +22,14 @@ type PropTypes = {
 const ChatContainer = ({selectedUser, setSelectedUser}: PropTypes ) => {
 
   const { socket } = useSocket()
-  const {user, token} = useAuth()
+  const {id , token} = useAuth()
 
 
   useEffect(() => {
 
     const loadmessages = async () => {
-      const res = await getMessages(selectedUser._id!, token)
+      console.log(selectedUser._id, token)
+      const res = await getMessages(selectedUser._id!, token!)
       if(res.success){
         setMessages(res.payload)
       } else {
@@ -51,9 +52,9 @@ const ChatContainer = ({selectedUser, setSelectedUser}: PropTypes ) => {
   }, [socket])
 
   const handleSend = () => {
-    if(user){
+    if(id){
       const messageToSend: Message = {
-      SenderId: user._id as string,
+      SenderId: id,
       ReceiverId: selectedUser._id as string,
       text: messageText,
       createdAt: new Date().toISOString()
@@ -87,8 +88,8 @@ const ChatContainer = ({selectedUser, setSelectedUser}: PropTypes ) => {
 
       <div className="flex-1 min-h-0 overflow-y-auto">
         {messages.map((msg, indx) =>(
-          <div key={indx} className={`flex items-end justify-end gap-2 ${msg.SenderId !== user._id && 'flex-row-reverse'}` }>
-            { <p className={`p-2 max-w-50 md:text-sm font-light rounded-lg mb-8 break-all bg-violet-500/30 text-white ${msg.SenderId === user._id ? 'rounded-br-none ' : 'rounded-bl-none' } `}> {msg.text } </p>}
+          <div key={indx} className={`flex items-end justify-end gap-2 ${msg.SenderId !== id && 'flex-row-reverse'}` }>
+            { <p className={`p-2 max-w-50 md:text-sm font-light rounded-lg mb-8 break-all bg-violet-500/30 text-white ${msg.SenderId === id ? 'rounded-br-none ' : 'rounded-bl-none' } `}> {msg.text } </p>}
             <div className="text-center text-xs">
               <img src={assets.avatar_icon} alt='' className="w-7 rounded-full"/> 
               <p className="text-gray-500" >{formatMessageTime(msg.createdAt)}</p>

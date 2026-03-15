@@ -6,7 +6,9 @@ type PropTypes = {
     selectedUser: User;
 }
 
+
 const RightSideBar = ({selectedUser} : PropTypes) => {
+
   return selectedUser !== initState  && (
     <div className=" w-full relative overflow-y-scroll ">
       <div className="pt-10 flex flex-col items-center gap-2 text-xs font-light mx-auto">

@@ -90,3 +90,15 @@ export const getUsers = async (req, res) => {
     }
    
 }
+
+export const getOneUser = async (req, res) =>  {
+    const { id } = req.query
+    console.log(id)
+    try {
+        const user = await User.findById(id)
+        if(!user) res.status(404).json({ success: false, details: 'user not found!'})
+        res.status(200).json({ success: true, detials: 'user found!', user: user})
+    } catch(e) {
+        res.status(500).json({ success: false, details: 'Server Error!' + e.message})
+    }
+}

@@ -30,16 +30,12 @@ const io = new Server(server, { cors: {
 }} )
 
 io.on('connection', (socket) => {
-    console.log("a user connected:" + socket.id)
 
     socket.on('send-message', async (message) => {
         await Message.create(message)
         io.emit('receive-message', (message))
     })
 
-    socket.on('disconnect', () => {
-        console.log('User' + socket.id + "disconnected")
-    })
 })
 
 

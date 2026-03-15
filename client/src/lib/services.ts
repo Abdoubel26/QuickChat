@@ -45,8 +45,18 @@ export const updateUser = async (fullname: string, bio: string, id: string) => {
     return res.json()
 }
 
+export const getOneUser = async (id: string) => {
+    const res = await fetch(`${API_URL_USER}/getOneUser?id=${id}`, {
+        method: 'GET', 
+        headers: {
+            "Content-Type": "application/json"
+        }   
+    })
+    return res.json()
+}
+
 export const getusers = async () => {
-    const res = await fetch(`${API_URL_USER}`, {
+    const res = await fetch(`${API_URL_USER}/getUsers`, {
         method: 'GET'
     })
     return res.json()
@@ -65,3 +75,4 @@ export const getMessages = async (secondUserId: string, token: string) => {
     })
     return res.json()
 }
+
