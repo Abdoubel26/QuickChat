@@ -1,4 +1,4 @@
-import { useContext, useState, createContext } from "react";
+import { useContext, useState, createContext, useEffect } from "react";
 import {  type User } from '../lib/types'
 
 interface authContextType {
@@ -27,6 +27,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode}> = ({ children 
         localStorage.setItem('token', token)
     }
 
+    useEffect(() => {
+        const user = localStorage.getItem('user')
+        const token = localStorage.getItem('token')
+        if(user && token){
+            setToken(token)
+            setUser(JSON.parse(user))
+        }
+    }, [])
+
     const logout: () => void = () => {
         setUser(null)
         setToken(null)
@@ -34,6 +43,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode}> = ({ children 
         localStorage.removeItem('token')
     }
 
+    console.log(token)
     return (
         <authContext.Provider value={{ user, token, setAuth, logout}}>
             {children}

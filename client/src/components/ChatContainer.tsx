@@ -5,6 +5,7 @@ import { formatMessageTime } from "../lib/utils";
 import { type User } from "../lib/types";
 import { useSocket } from "../context/socketContext";
 import { getMessages } from "../lib/services";
+import { useAuth } from "../context/authContext";
 
 interface Message {
   SenderId: string, 
@@ -21,14 +22,13 @@ type PropTypes = {
 const ChatContainer = ({selectedUser, setSelectedUser}: PropTypes ) => {
 
   const { socket } = useSocket()
+  const {user, token} = useAuth()
 
-  const token = localStorage.getItem('token')!
-  const user = JSON.parse(localStorage.getItem('user')!)
 
   useEffect(() => {
 
     const loadmessages = async () => {
-      const res = await getMessages(user._id, selectedUser._id!, token)
+      const res = await getMessages(selectedUser._id!, token)
       if(res.success){
         setMessages(res.payload)
       } else {
@@ -51,15 +51,16 @@ const ChatContainer = ({selectedUser, setSelectedUser}: PropTypes ) => {
   }, [socket])
 
   const handleSend = () => {
-    const thisUser  = JSON.parse(localStorage.getItem('user')!)
-    const messageToSend: Message = {
-      SenderId: thisUser._id as string,
+    if(user){
+      const messageToSend: Message = {
+      SenderId: user._id as string,
       ReceiverId: selectedUser._id as string,
       text: messageText,
       createdAt: new Date().toISOString()
     }
     socket.emit('send-message', (messageToSend))
     setMessageText('')
+    }
   }
 
   const [messages, setMessages] = useState<Message[]>([])

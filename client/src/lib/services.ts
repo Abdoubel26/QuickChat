@@ -52,11 +52,11 @@ export const getusers = async () => {
     return res.json()
 }
 
-export const getMessages = async (thisUserId: string,  secondUserId: string, token: string) => {
+export const getMessages = async (secondUserId: string, token: string) => {
 
     console.log('getMessages service running...')
 
-    const res =  await fetch(`${API_URL_MESSAGES}?id=${thisUserId}&secondUserId=${secondUserId}`, {
+    const res =  await fetch(`${API_URL_MESSAGES}?secondUserId=${secondUserId}`, {
         method: 'GET',
         headers: {
             "Content-Type": 'application/json',

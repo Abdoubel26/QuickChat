@@ -12,7 +12,7 @@ export const AuthMiddleware = (req, res, next) => {
 
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET)
-        req.userCrendentials = token
+        req.userCrendentials = decoded
         next()
     } catch(e) {
         console.log(e.message)

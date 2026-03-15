@@ -9,20 +9,17 @@ type PropTypes = {
     selectedUser: User;
     setSelectedUser: React.Dispatch<React.SetStateAction<User>>
 }
-
-
  
 const SideBar = ({selectedUser, setSelectedUser}: PropTypes) => {
 
   const [users, setUsers] = useState<User[]>([])
 
-  const ThisUser = JSON.parse(localStorage.getItem('user')!)
+  const { user } = useAuth()
 
-  
     const loadUsers = async () => {
       const response = await getusers()
-      if(response.success) {
-        const usersWithoutThisOne = response.users.filter( (u: User) => u._id !== ThisUser._id )
+      if(response.success && user) {
+        const usersWithoutThisOne = response.users.filter( (u: User) => u._id !== user._id )
         setUsers(usersWithoutThisOne)
       } else {
         alert(response.details)
