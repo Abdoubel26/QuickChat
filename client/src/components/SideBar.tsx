@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import assets from '../assets/assets'
 import { useAuth } from '../context/authContext';
 import { getusers } from '../lib/services';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { type User } from '../lib/types';
 
 type PropTypes = {
@@ -13,6 +13,7 @@ type PropTypes = {
 const SideBar = ({selectedUser, setSelectedUser}: PropTypes) => {
 
   const [users, setUsers] = useState<User[]>([])
+  const [searchInput, setSearchInput] = useState<string>('')
   
   const { id } = useAuth()
 
@@ -53,14 +54,14 @@ const SideBar = ({selectedUser, setSelectedUser}: PropTypes) => {
         </div>
         <div className='bg-[#282142] rounded-full flex items-center gap-2 my-2  py-3 px-4'>
             <img src={assets.search_icon} alt='Search' className='w-3'/>
-            <input type='text' className='bg-transparent border-none outline-none text-white text-xs placeholder [#c8c8c8] flex-1'  placeholder='Search User...'/>
+            <input type='text' className='bg-transparent border-none outline-none text-white text-xs placeholder [#c8c8c8] flex-1'  onChange={(e) => setSearchInput(e.target.value)} value={searchInput} placeholder='Search User...'/>
         </div>
       </div>
 
       <div className='flex flex-col overflow-y-scroll  '>
         {users.map((user, i) => {
             return ( 
-            <div onClick={()=> setSelectedUser(user)} className={`relative flex items-center gap-2 p-2 pl-4  rounded-2xl cursor-pointer max-sm:text-sm ${selectedUser?._id === user._id && 'bg-[#282142]/50'}`}> 
+            <div onClick={()=> setSelectedUser(user)} className={`relative flex items-center gap-2 p-2 pl-4  rounded-2xl cursor-pointer max-sm:text-sm ${selectedUser?._id === user._id && 'bg-[#282142]/50'} ${user.fullname.startsWith(searchInput.toLocaleLowerCase()) ? '' : 'hidden'}` }> 
                 <img src={assets.avatar_icon} alt='' className='w-8.75 aspect-squarerounded-full rounded-full' />
                 <div className=' flex flex-row items-center w-full '>
                     <p className='whitespace-nowrap text-sm'>{user.fullname}</p>
